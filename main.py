@@ -19,7 +19,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.add_middleware(
     SessionMiddleware,
-    secret_key="0819"
+    secret_key="xxxx" # your password
 )
 
 templates = Jinja2Templates(directory="templates")
