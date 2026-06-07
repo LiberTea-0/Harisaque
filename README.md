@@ -29,4 +29,4 @@ This project is designed as a lightweight local blogging system with basic conte
 ## ▶️ Run Locally
 
 ```bash
-uvicorn main:app --reload
+python -m uvicorn main:app --reload
