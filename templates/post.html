@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<a href="/" class="btn btn-secondary btn-sm mb-3">← Home</a>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+
+        <div class="card">
+            <div class="card-body">
+
+                <!-- 🏷️ tags（新增） -->
+                {% if post.tags %}
+                    <div class="mb-3">
+                        {% for tag in post.tags.split(',') %}
+                            <a href="/tag/{{ tag.strip() }}"
+                               class="badge bg-primary text-decoration-none"
+                               style="margin-right: 5px;">
+                                {{ tag.strip() }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <!-- 标题 -->
+                <h2 class="mb-4">{{ post.title }}</h2>
+
+                <hr>
+
+                <!-- 内容 -->
+                <p style="white-space: pre-line; font-size: 16px; line-height: 1.8;">
+                    {{ post.content }}
+                </p>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- 🔍 搜索 -->
+<form action="/search" method="get" style="margin-bottom: 15px;">
+    <input type="text" name="q" placeholder="Search posts..." class="form-control" style="max-width: 300px; display:inline-block;">
+    <button type="submit" class="btn btn-primary btn-sm">Search</button>
+</form>
+
+<!-- 🔐 管理入口 -->
+{% if is_admin %}
+    <a href="/posts/create">✏️ New Post</a> |
+    <a href="/logout">Logout</a>
+{% else %}
+    <a href="/login">Admin Login</a>
+{% endif %}
+
+<hr>
+
+<!-- 📄 文章列表 -->
+{% for post in posts %}
+    <div style="margin-bottom: 25px;">
+
+        <!-- 🏷️ 标题（增强层级） -->
+        <h2 style="font-size: 26px; font-weight: 600; margin-bottom: 8px;">
+            {{ post.title }}
+        </h2>
+
+        <!-- 🏷️ 标签 -->
+        {% if post.tags %}
+            <div style="margin-bottom: 8px;">
+                {% for tag in post.tags.split(',') %}
+                    <a href="/tag/{{ tag.strip() }}"
+                       style="
+                           display:inline-block;
+                           padding:3px 8px;
+                           margin-right:5px;
+                           font-size:12px;
+                           background:#0d6efd;
+                           color:white;
+                           border-radius:12px;
+                           text-decoration:none;
+                       ">
+                        {{ tag.strip() }}
+                    </a>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- ✨ 摘要（核心改动） -->
+        <p style="color:#555; font-size:15px; line-height:1.6;">
+            {{ post.content[:100] }}
+            {% if post.content|length > 100 %}...{% endif %}
+        </p>
+
+        <!-- 🔗 操作 -->
+        <a href="/posts/{{ post.id }}" style="margin-right:10px;">
+            Read more →
+        </a>
+
+        {% if is_admin %}
+            <button onclick="deletePost({{ post.id }})"
+                    style="margin-left:10px; color:red;">
+                🗑️ Delete
+            </button>
+
+            <a href="/posts/{{ post.id }}/edit" style="margin-left:10px;">
+                ✏️ Edit
+            </a>
+        {% endif %}
+
+        <hr style="margin-top:15px;">
+    </div>
+{% endfor %}
+
+<!-- 空状态 -->
+{% if not posts %}
+    <p style="color: gray;">No posts yet</p>
+{% endif %}
+
+<!-- 🧨 删除逻辑 -->
+<script>
+function deletePost(id) {
+    fetch("/posts/" + id, {
+        method: "DELETE"
+    }).then(() => location.reload())
+}
+</script>
+
+{% endblock %}
